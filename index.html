@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;700&family=Rubik:ital,wght@0,400;0,500;0,700;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <script src="./assest/icon/fontawesome.js"></script>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <img
+      src="./assest/img/photo-1504608524841-42fe6f032b4b.avif"
+      alt=""
+      class="weather__bgc"
+    />
+    <div class="weather">
+      <img
+        src="./assest/img/photo-1489515217757-5fd1be406fef (1).avif"
+        alt=""
+      />
+      <div class="weather__notification">
+        <p class="weather__logo">the.weather</p>
+        <div class="weather__main">
+          <p class="weather__temperature">16</p><span class="weather__degree">&#176</span>
+          <div class="weather__desc">
+            <p class="weather__country">London</p>
+            <p class="weather__time">06:09 - Monday,9 Sep'19</p>
+          </div>
+          <div class="weahter__situation">
+            <p class="weather__status-img">
+              <i class="fa-light fa-clouds"></i>
+            </p>
+            <p class="weather__status-text">Cloudy</p>
+          </div>
+        </div>
+      </div>
+      <div class="weather__info">
+        <div class="weather__loaction">
+          <div class="weather__search">
+            <input type="text" placeholder="Another location" class="weather__city" />
+            <button class="search__btn">
+              <i class="fa-light fa-magnifying-glass"></i>
+            </button>
+          </div>
+          <div class="weather__adress">
+            <p id="weather__address__city">Birmingham</p>
+            <p id="weather__address__city">Manchester</p>
+            <p id="weather__address__city">New York</p>
+            <p id="weather__address__city">Califonia</p>
+          </div>
+        </div>
+        <hr />
+        <div class="weather__details">
+          <p class="weather__title">Weather Details</p>
+          <div class="weather__details__list">
+            <div class="weather__details__item">
+              <p>Cloudy</p>
+              <div class="weather__parameter">
+                <p  class="weather__cloudy">86</p><span>%</span>
+              </div>
+            </div>
+            <div class="weather__details__item">
+              <p>Humidity</p>
+              <div class="weather__parameter">
+                <p  class="weather__humidity">86</p><span>%</span>
+              </div>
+            </div>
+            <div class="weather__details__item">
+              <p>Wind</p>
+              <div class="weather__parameter">
+                <p class="weather__wind">86</p><span>km/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+
+
+
+    <script>
+
+          const main = document.querySelector(".weather__main");
+          const status = document.querySelector('.weather__status-img');
+          const statusDesc = document.querySelector('.weather__status-text');
+          const temp = document.querySelector(".weather__temperature");
+          const coun = document.querySelector(".weather__country");
+          const cloud = document.querySelector(".weather__cloudy");
+          const hum = document.querySelector(".weather__humidity");
+          const wind = document.querySelector(".weather__wind");
+          const searchName = document.querySelector(".weather__city");
+          const searchBtn = document.querySelector(".search__btn");
+          const address = document.querySelector('.weather__adress');
+          const time = document.querySelector(".weather__time")
+          const logo = document.querySelector('.weather__logo')
+          let COUNTRY__DEFAULT = "";
+          let API_KEY = "b0e4f15ad86c6e0384d51ca5a618ffa8";
+
+
+          
+          // cach 1:
+          function apiWeather() {
+            return new Promise((resolve, reject) => {
+              let API = `https://api.openweathermap.org/data/2.5/weather?q=${COUNTRY__DEFAULT}&appid=${API_KEY}&units=metric&lang=en`;
+             fetch(API)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data) {
+                  temp.innerHTML = Math.round(data.main.temp);
+                coun.innerHTML = data.name;
+                cloud.innerHTML = data.clouds.all;
+                hum.innerHTML = data.main.humidity;
+                wind.innerHTML = Math.round(data.wind.speed * 3,6)
+                let weatherStatus = data.weather[0].description;
+                switch (weatherStatus) {
+                  case 'clear sky':
+                    status.innerHTML = '<i class="fa-light fa-cloud"></i>'
+                    statusDesc.innerHTML = 'clear sky';
+                    break;
+                  case 'clouds':
+                  case 'scattered clouds':
+                    status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+                    statusDesc.innerHTML = 'cloudy';
+                    break;
+                  case 'rain':
+                  case 'light intensity shower rain':
+                    status.innerHTML = '<i class="fa-light fa-cloud-showers"></i>';
+                    statusDesc.innerHTML = 'rainny';
+                    break;
+                  case 'sun':
+                    status.innerHTML = '<i class="fa-light fa-sun-bright"></i>';
+                    statusDesc.innerHTML = 'sunny';
+                    break;
+                  default:
+                    status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+                    statusDesc.innerHTML = weatherStatus ;
+                    break;
+                }
+                }
+                else{
+                  reject()
+                }
+              });
+            })
+            
+          }
+          
+
+            // function weatherAPI(params) {
+            //   // cach 2:
+            // var xhttp = new XMLHttpRequest();
+            // xhttp.onreadystatechange = function() {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //       const parse = JSON.parse(xhttp.responseText)
+            //       temp.innerHTML = Math.round(parse.main.temp);
+            //       coun.innerHTML = parse.name;
+            //       cloud.innerHTML = parse.clouds.all;
+            //       hum.innerHTML = parse.main.humidity;
+            //       wind.innerHTML = Math.round(parse.wind.speed * 3,6)
+            //       let weatherStatus = parse.weather[0].description;
+            //       switch (weatherStatus) {
+            //         case 'clear sky':
+            //           status.innerHTML = '<i class="fa-light fa-cloud"></i>'
+            //           statusDesc.innerHTML = 'clear sky';
+            //           break;
+            //         case 'clouds':
+            //         case 'scattered clouds':
+            //           status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+            //           statusDesc.innerHTML = 'cloudy';
+            //           break;
+            //         case 'rain':
+            //         case 'light intensity shower rain':
+            //           status.innerHTML = '<i class="fa-light fa-cloud-showers"></i>';
+            //           statusDesc.innerHTML = 'rainny';
+            //           break;
+            //         case 'sun':
+            //           status.innerHTML = '<i class="fa-light fa-sun-bright"></i>';
+            //           statusDesc.innerHTML = 'sunny';
+            //           break;
+            //         default:
+            //           status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+            //           statusDesc.innerHTML = weatherStatus ;
+            //           break;
+            //       }
+            //     }
+            // };
+            // xhttp.open("GET", `https://api.openweathermap.org/data/2.5/weather?q=${COUNTRY__DEFAULT}&appid=${API_KEY}&units=metric&lang=en`, true);
+            // xhttp.send();
+            // }
+
+
+            // async function apiWeather() {
+            //   try{
+            //     const API = `https://api.openweathermap.org/data/2.5/weather?q=${COUNTRY__DEFAULT}&appid=${API_KEY}&units=metric&lang=en`;
+            //     let res = await fetch(API);
+            //     let data = await res.json();
+            //     temp.innerHTML = Math.round(data.main.temp);
+            //       coun.innerHTML = data.name;
+            //       cloud.innerHTML = data.clouds.all;
+            //       hum.innerHTML = data.main.humidity;
+            //       wind.innerHTML = Math.round(data.wind.speed * 3,6)
+            //       let weatherStatus = data.weather[0].description;
+            //       switch (weatherStatus) {
+            //         case 'clear sky':
+            //           status.innerHTML = '<i class="fa-light fa-cloud"></i>'
+            //           statusDesc.innerHTML = 'clear sky';
+            //           break;
+            //         case 'clouds':
+            //         case 'scattered clouds':
+            //           status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+            //           statusDesc.innerHTML = 'cloudy';
+            //           break;
+            //         case 'rain':
+            //         case 'light intensity shower rain':
+            //           status.innerHTML = '<i class="fa-light fa-cloud-showers"></i>';
+            //           statusDesc.innerHTML = 'rainny';
+            //           break;
+            //         case 'sun':
+            //           status.innerHTML = '<i class="fa-light fa-sun-bright"></i>';
+            //           statusDesc.innerHTML = 'sunny';
+            //           break;
+            //         default:
+            //           status.innerHTML = '<i class="fa-light fa-clouds"></i>';
+            //           statusDesc.innerHTML = weatherStatus ;
+            //           break;
+            //       }
+            //   }
+            //   catch(err){
+            //     alert(err)
+            //   }
+            // }
+
+
+          function search() {
+            searchBtn.addEventListener("click", () => {
+              COUNTRY__DEFAULT = searchName.value;
+              apiWeather();
+            });
+          }
+          search();
+
+          
+
+
+          logo.addEventListener('click', function () {
+            init();
+          })
+          function init() {
+            COUNTRY__DEFAULT = "london";
+            let date = new Date();
+            let house = date.getHours();
+            let minute = date.getMinutes();
+            let day = date.getDay();
+            switch (day) {
+              case 0:
+                  day_name = "Sunday";
+                  break;
+              case 1:
+                  day_name = "Monday";
+                  break;
+              case 2:
+                  day_name = "Tuesday";
+                  break;
+              case 3:
+                  day_name = "Wednesday";
+                  break;
+              case 4:
+                  day_name = "Thursday";
+                  break;
+              case 5:
+                  day_name = "Friday";
+                  break;
+              case 6:
+                  day_name = "Saturday";
+              }
+              const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+              let month = monthName[date.getMonth()];
+              let year = date.getFullYear();
+              time.innerHTML = `${house}:${minute} - ${day_name}, ${date.getMonth()} ${month}'${year} `
+            apiWeather();
+          }
+          init();
+    </script>
+  </body>
+</html>
